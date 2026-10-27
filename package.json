@@ -1,0 +1,12 @@
+{
+  "name": "bittaalo",
+  "version": "1.0.0",
+  "description": "BITTAALO Full-Stack Lifestyle Accessories E-Commerce Store",
+  "scripts": {
+    "start": "node -e \"console.log('Use npm run dev:all to run both client and server!')\"",
+    "dev:server": "cd server && npm start",
+    "dev:client": "cd client && npm run dev",
+    "dev:all": "npx concurrently -n \"SERVER,CLIENT\" -c \"blue,green\" \"cd server && npm start\" \"cd client && npm run dev\"",
+    "tunnel": "npx localtunnel --port 5173"
+  }
+}
