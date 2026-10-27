@@ -19,22 +19,26 @@ app.use(
   })
 );
 
-// CORS configuration (allow Vite dev server)
+// CORS configuration (allow Vite dev server + Vercel production)
 const allowedOrigins = [
-  process.env.CLIENT_URL || 'http://localhost:5173',
   'http://localhost:5173',
   'http://127.0.0.1:5173',
   'http://localhost:5000',
+  // Production: set CLIENT_URL env var on Vercel (e.g. https://bittaalo.vercel.app)
+  ...(process.env.CLIENT_URL ? [process.env.CLIENT_URL] : []),
 ];
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps, curl, Postman)
-      if (!origin || allowedOrigins.includes(origin)) {
+      // Allow requests with no origin (mobile apps, curl, Postman)
+      if (!origin) return callback(null, true);
+      // Allow any vercel.app subdomain and explicitly whitelisted origins
+      const isVercel = origin.endsWith('.vercel.app');
+      if (isVercel || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        callback(null, true); // Dev convenience
+        callback(null, true); // Dev convenience — tighten in production if needed
       }
     },
     credentials: true,
